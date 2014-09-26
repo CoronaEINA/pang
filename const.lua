@@ -5,7 +5,7 @@ const = {
 	pared = {
 		grosor = 10
 	},
-	sprite = {
+	personaje = {
 		escala = 0.7
 	},
 	--vidas
