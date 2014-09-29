@@ -6,13 +6,6 @@ local sheetInfo = require("flechas")
 local flechasSheet = graphics.newImageSheet( "images/flechas.png", sheetInfo:getSheet() )
 
 motor = {}
-bola = {}
-
-local params_bola = {
-	 [0]={ xdir=-1, ydir=1, xspeed=2.8, yspeed=6.1 },
-	 [1]={ xdir=1, ydir=1, xspeed=3.8, yspeed=4.2 },
-	 [2]={ xdir=1, ydir=-1, xspeed=5.8, yspeed=5.5 }
-}
 
 local personajeSequence = {
 	{
@@ -46,12 +39,6 @@ local flechaSequence = {
 	}
 }
 
-function motor:inicializar()
-	physics.setDrawMode( "hybrid" )
-	physics.start( )
-	physics.setGravity( 0, 5 )
-end
-
 function motor:crearFondo(nombre_fichero)
 	fondo = display.newImageRect( nombre_fichero, display.contentWidth, display.contentHeight )
 	fondo.x = display.contentCenterX
@@ -65,7 +52,10 @@ function motor:crearSuelo()
 	suelo.myName = "suelo"
 	suelo:setFillColor( 0.5, 0.5, 0.5 )
 	
-	physics.addBody( suelo, "static", { bounce = 0.1, const.colisiones.paredes } )
+	physics.addBody( suelo, "static", { bounce = 0.1,		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	
 	return suelo
 end
@@ -74,7 +64,10 @@ function motor:crearTecho()
 	local techo = display.newRect( display.contentCenterX,  const.suelo.grosor/2 , display.contentWidth + 60, const.suelo.grosor)
 	techo.myName="techo"
 	techo:setFillColor( 0.5, 0.5, 0.5 )
-	physics.addBody( techo, "static", { bounce = 0.1, const.colisiones.paredes } )
+	physics.addBody( techo, "static", { bounce = 0.1, 		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	
 	return techo
 end
@@ -82,7 +75,10 @@ function motor:crearParedIzq()
 	local paredIzq = display.newRect( 0, display.contentCenterY, const.suelo.grosor,display.contentWidth + 60)
 	paredIzq.myName="paredIzq"
 	paredIzq:setFillColor( 0.5, 0.5, 0.5 )
-	physics.addBody( paredIzq, "static", { bounce = 0.1, const.colisiones.paredes } )
+	physics.addBody( paredIzq, "static", { bounce = 0.1, 		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	return paredIzq
 end
 
@@ -90,7 +86,10 @@ function motor:crearParedDer()
 	local paredDer = display.newRect(  display.contentWidth, display.contentCenterY, const.suelo.grosor,display.contentWidth + 60)
 	paredDer.myName="paredDer"
 	suelo:setFillColor( 0.5, 0.5, 0.5 )	
-	physics.addBody( paredDer, "static", { bounce = 0.1, const.colisiones.paredes } )
+	physics.addBody( paredDer, "static", { bounce = 0.1, 		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	return paredDer
 end
 
@@ -117,7 +116,10 @@ function motor:crearPersonaje()
 
 	physics.addBody( personaje, "dynamic", {
 		bounce = 0.1,
-		filter = const.colisiones.personaje
+		filter = {
+			categoryBits = 1,
+			maskBits = 3
+		}
 		} )
 	return personaje
 end
@@ -130,36 +132,13 @@ function motor:crearFlecha()
 	grupoFrente:insert (flecha)
 	flecha:toBack( )
 	physics.addBody( flecha, "static", {
-		filter = const.colisiones.flecha
+		filter = {
+			categoryBits = 4,
+			maskBits = 2
+		}
 		})
 
 	return flecha
-end
-
-function motor:crearBola(posX, posY, radio)
-	tipoBola = math.random(2)
-	
-	print ("tipoBola:"..tipoBola)
-	circle = display.newCircle( posX, posY, radio )
-	circle.myName = "ball"
-	circle.id=const.bolas.numInicial
-	circle.radius = radio
-	circle.xdir = params_bola[tipoBola].xdir
-	circle.ydir = params_bola[tipoBola].ydir
-	circle.xspeed = params_bola[tipoBola].xspeed
-	circle.yspeed = params_bola[tipoBola].yspeed
-	const.bolas.numInicial=const.bolas.numInicial-1
-
-	physics.addBody( circle,"dinamic",
-		{
-			density = 1.0,
-			friction = 0,
-			bounce = 1,
-			radius = radio,
-			filter = const.colisiones.bola
-		}
-	) 
-	return circle
 end
 
 motor.movingListener = function(event)

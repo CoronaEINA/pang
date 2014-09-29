@@ -9,7 +9,7 @@ const = {
 		escala = 0.7
 	},
 	--vidas
-	hearts=1,
+	fluvi=1,
 	
 	--bolas
 	bolas={
@@ -18,25 +18,11 @@ const = {
 		xDefault=300,
 		yDefault=100,
 		radio = {33,22,11}
-	},
-	colisiones = {
-		personaje = {
-			categoryBits = 1,
-			maskBits = 3
-		},
-		bola = {
-			categoryBits = 2,
-			maskBits = 13		
-		},
-		paredes = {
-			categoryBits = 3,
-			maskBits = 3		
-		},
-		flecha = {
-			categoryBits = 4,
-			maskBits = 2		
-		},		
+		-- radio_grande=33,
+		-- radio_medio=22,
+		-- radio_peq=11
 	}
+	
 }
 
 return const

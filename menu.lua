@@ -118,10 +118,13 @@ function scene:show( event )
 
     local sceneGroup = self.view
     local phase = event.phase
-		titulo.alpha=1
+		
     if ( phase == "will" ) then
         -- Called when the scene is still off screen (but is about to come on screen).
     elseif ( phase == "did" ) then
+		print("showMenu")
+		titulo.alpha=1
+		fondo.aplha=1
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
