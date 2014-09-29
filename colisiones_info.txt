@@ -1,4 +1,4 @@
 jugador		cb = 1 // mb = 3
-bola		cb = 2 // mb = F
+bola		cb = 2 // mb = 13
 paredes		cb = 3 // mb = 3
 flecha		cb = 4 // mb = 2

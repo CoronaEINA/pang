@@ -14,7 +14,6 @@ local phisics = require("physics")
 local const = require("const")
 local sheetInfo = require("sprites")
 local motor = require("motor")
-local bola = require("bola")
 
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
@@ -27,22 +26,10 @@ local bola = require("bola")
 
 -- "scene:create()"
 function scene:create( event )
-
-
-    local sceneGroup = self.view
-
-    -- Initialize the scene here.
-    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
- 	--juego = display.newText( "juego", 0, 0, native.systemFontBold, 24 )
- 	--juego = display.newImage( "tittle.png" )
-
-	titulo.alpha=0
-	physics.setDrawMode( "hybrid" )   --shows collision engine outlines only
-	physics.start( )
 	   
 	local sceneGroup = self.view
 
- function onLocalCollision( event )     
+	function onLocalCollision( event )     
 		if (event.other.myName=="personaje") then
 			print( event.target.myName .. ": collision began with " .. event.other.myName )
 			--vidas=vidas-1
@@ -62,41 +49,40 @@ function scene:create( event )
 				physics.pause()
 				physics.start()
 				if (event.target.radius == 33) then
-					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bolaa:applyForce( -200, 0, bolaa.x, bolaa.y )
-				elseif (event.target.radius == 22) then
-					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
 					bolaa:applyForce( -100, 0, bolaa.x, bolaa.y )
+				elseif (event.target.radius == 22) then
+					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa:applyForce( -50, 0, bolaa.x, bolaa.y )
 				end
 				bolaa:addEventListener( "collision", onLocalCollision )
-				gupoBolas:insert(bolaa)
+				grupoBolas:insert(bolaa)
 				sceneGroup:insert (bolaa)
 
 				-- bolaa:applyForce( -500, 0, bolaa.x, bolaa.y )
 
 				if (event.target.radius == 33) then
-					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bolaa:applyForce( 200, 0, bolaa.x, bolaa.y )
-				elseif (event.target.radius == 22) then
-					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
 					bolaa:applyForce( 100, 0, bolaa.x, bolaa.y )
+				elseif (event.target.radius == 22) then
+					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa:applyForce( 50, 0, bolaa.x, bolaa.y )
 				end
 				bolaa:addEventListener( "collision", onLocalCollision )
-				gupoBolas:insert(bolaa)
+				grupoBolas:insert(bolaa)
 				sceneGroup:insert (bolaa)
 				-- bolaa:applyForce( 500, 0, bolaa.x, bolaa.y )
 
 			end, 1 )
 
-
-
 			event.target:removeSelf( )
 			event.other:removeSelf( )
 		end
-			--os.exit()
-				
- 
 	end
+
+	titulo.alpha=0
+	
+	motor:inicializar()
 	
 	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo(),motor:crearTecho(),motor:crearParedIzq(),motor:crearParedDer())
 	pers=motor:crearPersonaje()
@@ -106,11 +92,11 @@ function scene:create( event )
 	personaje:addEventListener( "tap", motor.disparoListener )
 	Runtime:addEventListener( "touch", motor.movingListener )
 	
-	gupoBolas=display.newGroup()
+	grupoBolas=display.newGroup()
 	bolas={}
 	for i=1, const.bolas.numInicial, 1 do 
 		print (i) 
-		bolas[i]= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
+		bolas[i]= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
 		bolas[i]:addEventListener( "collision", onLocalCollision )
  	end 
 
