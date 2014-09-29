@@ -19,7 +19,8 @@ function bola:crearBola()
 		local ypos = display.contentHeight*0.5
 		circle = display.newImage("images/azul_grande.png")
 		--nombre de cada bola creada
-		circle.myName = "ball"..const.bolas.numInicial
+		circle.myName = "ball"
+		circle.id=const.bolas.numInicial
 	  const.bolas.numInicial=const.bolas.numInicial-1
 		circle.xdir = params[tipoBola].xdir
 		circle.ydir = params[tipoBola].ydir
@@ -40,7 +41,7 @@ function bola:crearBola()
 				}
 			}
 		) 
-		circle:applyForce( 1000, 0, circle.x, circle.y )
+		--circle:applyForce( 1000, 0, circle.x, circle.y )
 		return circle
 end
 

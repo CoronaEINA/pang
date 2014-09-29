@@ -95,8 +95,8 @@ function motor:crearPersonaje()
 	personaje = display.newSprite( personajeSheet , personajeSequence )
 	personaje.x = display.contentCenterX
 	personaje.y= display.contentHeight-const.suelo.grosor
-	personaje.width = personaje.width * const.personaje.escala
-	personaje.height = personaje.height * const.personaje.escala
+	personaje.width = personaje.width 
+	personaje.height = personaje.height 
 	personaje.myName ="personaje"
 
 	grupoFrente = display.newGroup( )
@@ -105,6 +105,7 @@ function motor:crearPersonaje()
 	physics.addBody( personaje, "dynamic", {
 		bounce = 0.1
 		} )
+	return personaje
 end
 
 function motor:crearFlecha()

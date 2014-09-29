@@ -40,28 +40,47 @@ function scene:create( event )
 	physics.start( )
 	   
 	local sceneGroup = self.view
-
-	motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo(),motor:crearTecho(),motor:crearParedIzq(),motor:crearParedDer())
-	motor:crearPersonaje()
-
+	
+	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo(),motor:crearTecho(),motor:crearParedIzq(),motor:crearParedDer())
+	pers=motor:crearPersonaje()
+	sceneGroup:insert(back)
+	sceneGroup:insert(pers)
+	
 	personaje:addEventListener( "tap", motor.disparoListener )
 	Runtime:addEventListener( "touch", motor.movingListener )
 	
+	gupoBolas=display.newGroup()
 	bolas={}
 	for i=1, const.bolas.numInicial, 1 do 
 		print (i) 
 		bolas[i]= bola:crearBola() 
  	end 
+
+	--sceneGroup:insert(grupoBolas)
 	--Cuando toque el suelo darle fuerza en y
 	--ball:applyForce( 0, 10, ball.x, ball.y )
 	
-	--COLISIONES--
+--COLISIONES--
 	local function onLocalCollision( self, event )
-    if ( event.phase == "began" ) then
-        print( self.myName .. ": collision began with " .. event.other.myName )
-    elseif ( event.phase == "ended" ) then
-        print( self.myName .. ": collision ended with " .. event.other.myName )
-    end
+    
+        
+				if (self.myName=="personaje" or event.other.myName=="personaje" )
+						and (self.myName=="ball" or event.other.myName=="ball") then
+							print( self.myName .. ": collision began with " .. event.other.myName )
+							--vidas=vidas-1
+							--personaje.x = display.contentCenterX
+							--personaje.y= display.contentHeight-const.suelo.grosor
+							--print("vidas"..vidas)
+							--if vidas==0 then				--cero vidas, finaliza el juego
+								--vidas=2
+								timer.performWithDelay( 500, function()
+								physics.stop()
+							end, 1 )
+							composer.gotoScene( "menu", "fade", 400 )
+				end
+					--os.exit()
+				
+ 
 	end
 	bolas[1].collision = onLocalCollision
 	bolas[1]:addEventListener( "collision", bolas[1] )
@@ -71,7 +90,7 @@ function scene:create( event )
  ----
  local function onPostCollisionn( event )
 		 if ( event.force > 1.0 ) then
-				 print( "Collision force: " .. event.force .. " Friction: " 	)
+				-- print( "Collision force: " .. event.force .. " Friction: " 	)
 		 end
  end
  Runtime:addEventListener( "postCollision", onPostCollisionn)
