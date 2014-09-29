@@ -14,8 +14,7 @@ local phisics = require("physics")
 local const = require("const")
 local sheetInfo = require("sprites")
 local motor = require("motor")
-
-physics.start( )
+local bola = require("bola")
 
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
@@ -31,11 +30,53 @@ function scene:create( event )
 
     local sceneGroup = self.view
 
-	motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo())
+    -- Initialize the scene here.
+    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
+ 	--juego = display.newText( "juego", 0, 0, native.systemFontBold, 24 )
+ 	--juego = display.newImage( "tittle.png" )
+
+	titulo.alpha=0
+	physics.setDrawMode( "hybrid" )   --shows collision engine outlines only
+	physics.start( )
+	   
+	local sceneGroup = self.view
+
+	motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo(),motor:crearTecho(),motor:crearParedIzq(),motor:crearParedDer())
 	motor:crearPersonaje()
 
 	personaje:addEventListener( "tap", motor.disparoListener )
 	Runtime:addEventListener( "touch", motor.movingListener )
+	
+	bolas={}
+	for i=1, const.bolas.numInicial, 1 do 
+		print (i) 
+		bolas[i]= bola:crearBola() 
+ 	end 
+	--Cuando toque el suelo darle fuerza en y
+	--ball:applyForce( 0, 10, ball.x, ball.y )
+	
+	--COLISIONES--
+	local function onLocalCollision( self, event )
+    if ( event.phase == "began" ) then
+        print( self.myName .. ": collision began with " .. event.other.myName )
+    elseif ( event.phase == "ended" ) then
+        print( self.myName .. ": collision ended with " .. event.other.myName )
+    end
+	end
+	bolas[1].collision = onLocalCollision
+	bolas[1]:addEventListener( "collision", bolas[1] )
+	suelo.collision = onLocalCollision
+	suelo:addEventListener( "collision", suelo )
+ -----------------------------------------------------------------
+ ----
+ local function onPostCollisionn( event )
+		 if ( event.force > 1.0 ) then
+				 print( "Collision force: " .. event.force .. " Friction: " 	)
+		 end
+ end
+ Runtime:addEventListener( "postCollision", onPostCollisionn)
+ ---
+ ---------------------------------------------------------	
 
 end
 

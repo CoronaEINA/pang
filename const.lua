@@ -13,6 +13,7 @@ const = {
 	
 	--bolas
 	bolas={
+		numInicial=2,
 		radio=33
 	}
 	

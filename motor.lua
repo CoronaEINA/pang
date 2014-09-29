@@ -57,6 +57,31 @@ function motor:crearSuelo()
 	return suelo
 end
 
+function motor:crearTecho()
+	local techo = display.newRect( display.contentCenterX,  const.suelo.grosor/2 , display.contentWidth + 60, const.suelo.grosor)
+	techo.myName="techo"
+	techo:setFillColor( 0.5, 0.5, 0.5 )
+	physics.addBody( techo, "static", { bounce = 0.1 } )
+	
+	return techo
+end
+function motor:crearParedIzq()
+	local paredIzq = display.newRect( 0, display.contentCenterY, const.suelo.grosor,display.contentWidth + 60)
+	paredIzq.myName="paredIzq"
+	paredIzq:setFillColor( 0.5, 0.5, 0.5 )
+	physics.addBody( paredIzq, "static", { bounce = 0.1 } )
+	return paredIzq
+end
+
+function motor:crearParedDer()
+	local paredDer = display.newRect(  display.contentWidth, display.contentCenterY, const.suelo.grosor,display.contentWidth + 60)
+	paredDer.myName="paredDer"
+	suelo:setFillColor( 0.5, 0.5, 0.5 )	
+	physics.addBody( paredDer, "static", { bounce = 0.1 } )
+	return paredDer
+end
+
+
 function motor:crearBackground(fondo, suelo)
 	grupoFondo = display.newGroup( )
 	grupoFondo:insert(fondo)
@@ -69,6 +94,7 @@ end
 function motor:crearPersonaje()
 	personaje = display.newSprite( personajeSheet , personajeSequence )
 	personaje.x = display.contentCenterX
+	personaje.y= display.contentHeight-const.suelo.grosor
 	personaje.width = personaje.width * const.personaje.escala
 	personaje.height = personaje.height * const.personaje.escala
 	personaje.myName ="personaje"
