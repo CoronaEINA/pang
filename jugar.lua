@@ -10,11 +10,8 @@
 local composer = require( "composer" )
 local widget = require( "widget" )
 local scene = composer.newScene()
-local phisics = require("physics")
-local const = require("const")
 local sheetInfo = require("sprites")
 local motor = require("motor")
-local bola = require("bola")
 
 
 -- -----------------------------------------------------------------------------------------------------------------
@@ -29,7 +26,6 @@ local bola = require("bola")
 -- "scene:create()"
 function scene:create( event )
 
-
     local sceneGroup = self.view
 
     -- Initialize the scene here.
@@ -38,11 +34,10 @@ function scene:create( event )
  	--juego = display.newImage( "tittle.png" )
 
 	titulo.alpha=0
-	physics.setDrawMode( "hybrid" )   --shows collision engine outlines only
-	physics.start( )
-	   
-	local sceneGroup = self.view
+	
 	chuache = audio.loadSound( "chua.mp3" )
+
+	motor:inicializar_fisica()
 
  function onLocalCollision( event )     
 		if (event.other.myName=="personaje") then
@@ -96,13 +91,8 @@ function scene:create( event )
 			event.target:removeSelf( )
 			event.other:removeSelf( )
 		end
-			--os.exit()
-		
-		
-		
- 
 	end
-	--------------------------------------------------------------------------------------------------------------------------------------------------
+
 	suelo=motor:crearSuelo()
 	techo=motor:crearTecho()
 	paredI=motor:crearParedIzq()
@@ -117,44 +107,19 @@ function scene:create( event )
 	sceneGroup:insert(paredD)
 	sceneGroup:insert(techo)
 	
-	
-	
-	personaje:addEventListener( "tap", motor.disparoListener )
+	personaje:addEventListener( "touch", motor.disparoListener )
 	Runtime:addEventListener( "touch", motor.movingListener )
 	
-	gupoBolas=display.newGroup()
+	grupoBolas=display.newGroup()
 	bolas={}
 	for i=1, 1, 1 do 
 		print (i) 
-		local bolica
-		bolica=bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
+		--local bolica
+		local bolica=motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
 		bolica:addEventListener( "collision", onLocalCollision )
 		sceneGroup:insert (bolica)
 		bolas[i]=bolica
  	end 
-
-
-	--sceneGroup:insert(grupoBolas)
-	--Cuando toque el suelo darle fuerza en y
-	--ball:applyForce( 0, 10, ball.x, ball.y )
-	
---COLISIONES--
-	
-	-- bolas[1].collision = onLocalCollision
-	-- bolas[1]:addEventListener( "collision", bolas[1] )
-	-- suelo.collision = onLocalCollision
-	-- suelo:addEventListener( "collision", suelo )
- -----------------------------------------------------------------
- ----
- local function onPostCollisionn( event )
-		 if ( event.force > 1.0 ) then
-				-- print( "Collision force: " .. event.force .. " Friction: " 	)
-		 end
- end
- Runtime:addEventListener( "postCollision", onPostCollisionn)
- ---
- ---------------------------------------------------------	
-
 end
 
 

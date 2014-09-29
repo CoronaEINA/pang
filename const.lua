@@ -6,7 +6,8 @@ const = {
 		grosor = 10
 	},
 	personaje = {
-		escala = 0.7
+		escala = 0.7,
+		vel = 0.2
 	},
 	--vidas
 	fluvi=1,
@@ -18,11 +19,25 @@ const = {
 		xDefault=300,
 		yDefault=100,
 		radio = {33,22,11}
-		-- radio_grande=33,
-		-- radio_medio=22,
-		-- radio_peq=11
+	},
+	colisiones = {
+		personaje = {
+			categoryBits = 1,
+			maskBits = 3 		-- Colisiona con bola y paredes
+		},
+		bola = {
+			categoryBits = 2,
+			maskBits = 13		-- Colisiona con todo menos con otra bola
+		},
+		paredes = {
+			categoryBits = 3,
+			maskBits = 3 		-- Colisiona con personaje y bola
+		},
+		flecha = {
+			categoryBits = 4,
+			maskBits = 2 		-- Colisiona con bola
+		}
 	}
-	
 }
 
 return const
