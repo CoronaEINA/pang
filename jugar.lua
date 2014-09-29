@@ -28,6 +28,7 @@ local bola = require("bola")
 -- "scene:create()"
 function scene:create( event )
 
+
     local sceneGroup = self.view
 
     -- Initialize the scene here.
@@ -40,6 +41,62 @@ function scene:create( event )
 	physics.start( )
 	   
 	local sceneGroup = self.view
+
+ function onLocalCollision( event )     
+		if (event.other.myName=="personaje") then
+			print( event.target.myName .. ": collision began with " .. event.other.myName )
+			--vidas=vidas-1
+			--personaje.x = display.contentCenterX
+			--personaje.y= display.contentHeight-const.suelo.grosor
+			--print("vidas"..vidas)
+			--if vidas==0 then				--cero vidas, finaliza el juego
+				--vidas=2
+			timer.performWithDelay( 500, function()
+				physics.stop()
+			end, 1 )
+			composer.gotoScene( "menu", "fade", 400 )
+		elseif (event.other.myName == "flecha") then
+			--event.target:removeSelf( )
+
+			timer.performWithDelay( 1, function()
+				physics.pause()
+				physics.start()
+				if (event.target.radius == 33) then
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+					bolaa:applyForce( -200, 0, bolaa.x, bolaa.y )
+				elseif (event.target.radius == 22) then
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa:applyForce( -100, 0, bolaa.x, bolaa.y )
+				end
+				bolaa:addEventListener( "collision", onLocalCollision )
+				gupoBolas:insert(bolaa)
+				sceneGroup:insert (bolaa)
+
+				-- bolaa:applyForce( -500, 0, bolaa.x, bolaa.y )
+
+				if (event.target.radius == 33) then
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+					bolaa:applyForce( 200, 0, bolaa.x, bolaa.y )
+				elseif (event.target.radius == 22) then
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa:applyForce( 100, 0, bolaa.x, bolaa.y )
+				end
+				bolaa:addEventListener( "collision", onLocalCollision )
+				gupoBolas:insert(bolaa)
+				sceneGroup:insert (bolaa)
+				-- bolaa:applyForce( 500, 0, bolaa.x, bolaa.y )
+
+			end, 1 )
+
+
+
+			event.target:removeSelf( )
+			event.other:removeSelf( )
+		end
+			--os.exit()
+				
+ 
+	end
 	
 	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo(),motor:crearTecho(),motor:crearParedIzq(),motor:crearParedDer())
 	pers=motor:crearPersonaje()
@@ -53,7 +110,8 @@ function scene:create( event )
 	bolas={}
 	for i=1, const.bolas.numInicial, 1 do 
 		print (i) 
-		bolas[i]= bola:crearBola() 
+		bolas[i]= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
+		bolas[i]:addEventListener( "collision", onLocalCollision )
  	end 
 
 	--sceneGroup:insert(grupoBolas)
@@ -61,31 +119,11 @@ function scene:create( event )
 	--ball:applyForce( 0, 10, ball.x, ball.y )
 	
 --COLISIONES--
-	local function onLocalCollision( self, event )
-    
-        
-				if (self.myName=="personaje" or event.other.myName=="personaje" )
-						and (self.myName=="ball" or event.other.myName=="ball") then
-							print( self.myName .. ": collision began with " .. event.other.myName )
-							--vidas=vidas-1
-							--personaje.x = display.contentCenterX
-							--personaje.y= display.contentHeight-const.suelo.grosor
-							--print("vidas"..vidas)
-							--if vidas==0 then				--cero vidas, finaliza el juego
-								--vidas=2
-								timer.performWithDelay( 500, function()
-								physics.stop()
-							end, 1 )
-							composer.gotoScene( "menu", "fade", 400 )
-				end
-					--os.exit()
-				
- 
-	end
-	bolas[1].collision = onLocalCollision
-	bolas[1]:addEventListener( "collision", bolas[1] )
-	suelo.collision = onLocalCollision
-	suelo:addEventListener( "collision", suelo )
+	
+	-- bolas[1].collision = onLocalCollision
+	-- bolas[1]:addEventListener( "collision", bolas[1] )
+	-- suelo.collision = onLocalCollision
+	-- suelo:addEventListener( "collision", suelo )
  -----------------------------------------------------------------
  ----
  local function onPostCollisionn( event )

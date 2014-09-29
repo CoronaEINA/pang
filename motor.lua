@@ -52,7 +52,10 @@ function motor:crearSuelo()
 	suelo.myName = "suelo"
 	suelo:setFillColor( 0.5, 0.5, 0.5 )
 	
-	physics.addBody( suelo, "static", { bounce = 0.1 } )
+	physics.addBody( suelo, "static", { bounce = 0.1,		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	
 	return suelo
 end
@@ -61,7 +64,10 @@ function motor:crearTecho()
 	local techo = display.newRect( display.contentCenterX,  const.suelo.grosor/2 , display.contentWidth + 60, const.suelo.grosor)
 	techo.myName="techo"
 	techo:setFillColor( 0.5, 0.5, 0.5 )
-	physics.addBody( techo, "static", { bounce = 0.1 } )
+	physics.addBody( techo, "static", { bounce = 0.1, 		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	
 	return techo
 end
@@ -69,7 +75,10 @@ function motor:crearParedIzq()
 	local paredIzq = display.newRect( 0, display.contentCenterY, const.suelo.grosor,display.contentWidth + 60)
 	paredIzq.myName="paredIzq"
 	paredIzq:setFillColor( 0.5, 0.5, 0.5 )
-	physics.addBody( paredIzq, "static", { bounce = 0.1 } )
+	physics.addBody( paredIzq, "static", { bounce = 0.1, 		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	return paredIzq
 end
 
@@ -77,7 +86,10 @@ function motor:crearParedDer()
 	local paredDer = display.newRect(  display.contentWidth, display.contentCenterY, const.suelo.grosor,display.contentWidth + 60)
 	paredDer.myName="paredDer"
 	suelo:setFillColor( 0.5, 0.5, 0.5 )	
-	physics.addBody( paredDer, "static", { bounce = 0.1 } )
+	physics.addBody( paredDer, "static", { bounce = 0.1, 		filter = {
+			categoryBits = 3,
+			maskBits = 3
+		} } )
 	return paredDer
 end
 
@@ -103,17 +115,28 @@ function motor:crearPersonaje()
 	grupoFrente:insert (personaje)
 
 	physics.addBody( personaje, "dynamic", {
-		bounce = 0.1
+		bounce = 0.1,
+		filter = {
+			categoryBits = 1,
+			maskBits = 3
+		}
 		} )
 	return personaje
 end
 
 function motor:crearFlecha()
 	flecha = display.newSprite( flechasSheet , flechaSequence )
+	flecha.myName = "flecha"
 	flecha.y = personaje.y
 	flecha.x = personaje.x
 	grupoFrente:insert (flecha)
 	flecha:toBack( )
+	physics.addBody( flecha, "static", {
+		filter = {
+			categoryBits = 4,
+			maskBits = 2
+		}
+		})
 
 	return flecha
 end

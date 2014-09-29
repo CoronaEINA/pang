@@ -13,8 +13,14 @@ const = {
 	
 	--bolas
 	bolas={
-		numInicial=2,
-		radio=33
+		numInicial=1,
+		radio=33,
+		xDefault=300,
+		yDefault=100,
+		radio = {33,22,11}
+		-- radio_grande=33,
+		-- radio_medio=22,
+		-- radio_peq=11
 	}
 	
 }
