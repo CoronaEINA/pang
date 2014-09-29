@@ -14,6 +14,7 @@ local phisics = require("physics")
 local const = require("const")
 local sheetInfo = require("sprites")
 local motor = require("motor")
+local bola = require("bola")
 
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
@@ -26,22 +27,39 @@ local motor = require("motor")
 
 -- "scene:create()"
 function scene:create( event )
+
+
+    local sceneGroup = self.view
+
+    -- Initialize the scene here.
+    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
+ 	--juego = display.newText( "juego", 0, 0, native.systemFontBold, 24 )
+ 	--juego = display.newImage( "tittle.png" )
+
+	titulo.alpha=0
+	physics.setDrawMode( "hybrid" )   --shows collision engine outlines only
+	physics.start( )
 	   
 	local sceneGroup = self.view
 
-	function onLocalCollision( event )     
+ function onLocalCollision( event )     
 		if (event.other.myName=="personaje") then
 			print( event.target.myName .. ": collision began with " .. event.other.myName )
 			--vidas=vidas-1
 			--personaje.x = display.contentCenterX
 			--personaje.y= display.contentHeight-const.suelo.grosor
 			--print("vidas"..vidas)
-			--if vidas==0 then				--cero vidas, finaliza el juego
+			const.fluvi=const.fluvi-1
+			if const.fluvi==0 then				--cero vidas, finaliza el juego
 				--vidas=2
-			timer.performWithDelay( 500, function()
-				physics.stop()
-			end, 1 )
-			composer.gotoScene( "menu", "fade", 400 )
+				timer.performWithDelay( 500, function()
+						physics.stop()
+				end, 1 )
+				const.fluvi=3
+				composer.removeScene( "jugar" )
+				composer.gotoScene( "menu", "fade", 400 )
+			end
+			
 		elseif (event.other.myName == "flecha") then
 			--event.target:removeSelf( )
 
@@ -49,56 +67,71 @@ function scene:create( event )
 				physics.pause()
 				physics.start()
 				if (event.target.radius == 33) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bolaa:applyForce( -100, 0, bolaa.x, bolaa.y )
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+					bolaa:applyForce( -200, 0, bolaa.x, bolaa.y )
 				elseif (event.target.radius == 22) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
-					bolaa:applyForce( -50, 0, bolaa.x, bolaa.y )
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa:applyForce( -100, 0, bolaa.x, bolaa.y )
 				end
 				bolaa:addEventListener( "collision", onLocalCollision )
-				grupoBolas:insert(bolaa)
+				gupoBolas:insert(bolaa)
 				sceneGroup:insert (bolaa)
 
 				-- bolaa:applyForce( -500, 0, bolaa.x, bolaa.y )
 
 				if (event.target.radius == 33) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bolaa:applyForce( 100, 0, bolaa.x, bolaa.y )
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+					bolaa:applyForce( 200, 0, bolaa.x, bolaa.y )
 				elseif (event.target.radius == 22) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
-					bolaa:applyForce( 50, 0, bolaa.x, bolaa.y )
+					bolaa= bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bolaa:applyForce( 100, 0, bolaa.x, bolaa.y )
 				end
 				bolaa:addEventListener( "collision", onLocalCollision )
-				grupoBolas:insert(bolaa)
+				gupoBolas:insert(bolaa)
 				sceneGroup:insert (bolaa)
 				-- bolaa:applyForce( 500, 0, bolaa.x, bolaa.y )
 
 			end, 1 )
-
 			event.target:removeSelf( )
 			event.other:removeSelf( )
 		end
+			--os.exit()
+		
+		
+		
+ 
 	end
-
-	titulo.alpha=0
+	--------------------------------------------------------------------------------------------------------------------------------------------------
+	suelo=motor:crearSuelo()
+	techo=motor:crearTecho()
+	paredI=motor:crearParedIzq()
+	paredD=motor:crearParedDer()
 	
-	motor:inicializar()
-	
-	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),motor:crearSuelo(),motor:crearTecho(),motor:crearParedIzq(),motor:crearParedDer())
+	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),suelo,techo,paredI,paredD)
 	pers=motor:crearPersonaje()
 	sceneGroup:insert(back)
 	sceneGroup:insert(pers)
+	sceneGroup:insert(suelo)
+	sceneGroup:insert(paredI)
+	sceneGroup:insert(paredD)
+	sceneGroup:insert(techo)
+	
+	
 	
 	personaje:addEventListener( "tap", motor.disparoListener )
 	Runtime:addEventListener( "touch", motor.movingListener )
 	
-	grupoBolas=display.newGroup()
+	gupoBolas=display.newGroup()
 	bolas={}
-	for i=1, const.bolas.numInicial, 1 do 
+	for i=1, 1, 1 do 
 		print (i) 
-		bolas[i]= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
-		bolas[i]:addEventListener( "collision", onLocalCollision )
+		local bolica
+		bolica=bola:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
+		bolica:addEventListener( "collision", onLocalCollision )
+		sceneGroup:insert (bolica)
+		bolas[i]=bolica
  	end 
+
 
 	--sceneGroup:insert(grupoBolas)
 	--Cuando toque el suelo darle fuerza en y
@@ -136,6 +169,7 @@ function scene:show( event )
         -- Called when the scene is now on screen.
         -- Insert code here to make the scene come alive.
         -- Example: start timers, begin animation, play audio, etc.
+		
     end
 end
 
@@ -164,7 +198,9 @@ function scene:destroy( event )
     -- Called prior to the removal of scene's view ("sceneGroup").
     -- Insert code here to clean up the scene.
     -- Example: remove display objects, save state, etc.
-end
+	print("destroy")
+	sceneGroup:removeSelf()
+	end
 
 
 -- -------------------------------------------------------------------------------
