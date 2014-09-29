@@ -15,6 +15,7 @@ local const = require("const")
 local sheetInfo = require("sprites")
 local motor = require("motor")
 
+
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
 -- -----------------------------------------------------------------------------------------------------------------
@@ -28,6 +29,7 @@ local motor = require("motor")
 function scene:create( event )
 	   
 	local sceneGroup = self.view
+	chuache = audio.loadSound( "chua.mp3" )
 
 	function onLocalCollision( event )     
 		if (event.other.myName=="personaje") then
@@ -44,35 +46,34 @@ function scene:create( event )
 			composer.gotoScene( "menu", "fade", 400 )
 		elseif (event.other.myName == "flecha") then
 			--event.target:removeSelf( )
-
+			audio.play(chuache)
+			--audio.play( chuache )
 			timer.performWithDelay( 1, function()
 				physics.pause()
 				physics.start()
 				if (event.target.radius == 33) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bolaa:applyForce( -100, 0, bolaa.x, bolaa.y )
+					bola1= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+					bola2= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+					bola1:applyForce( -100, 0, bola1.x, bola1.y )
+					bola2:applyForce( 100, 0, bola2.x, bola2.y )
+					bola1:addEventListener( "collision", onLocalCollision )
+					bola2:addEventListener( "collision", onLocalCollision )
+					grupoBolas:insert(bola1)
+					grupoBolas:insert(bola2)
+					sceneGroup:insert (bola1)
+					sceneGroup:insert (bola2)
 				elseif (event.target.radius == 22) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
-					bolaa:applyForce( -50, 0, bolaa.x, bolaa.y )
+					bola1= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bola2= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+					bola1:applyForce( -50, 0, bola1.x, bola1.y )
+					bola2:applyForce( 50, 0, bola2.x, bola2.y )
+					bola1:addEventListener( "collision", onLocalCollision )
+					bola2:addEventListener( "collision", onLocalCollision )
+					grupoBolas:insert(bola1)
+					grupoBolas:insert(bola2)
+					sceneGroup:insert (bola1)
+					sceneGroup:insert (bola2)
 				end
-				bolaa:addEventListener( "collision", onLocalCollision )
-				grupoBolas:insert(bolaa)
-				sceneGroup:insert (bolaa)
-
-				-- bolaa:applyForce( -500, 0, bolaa.x, bolaa.y )
-
-				if (event.target.radius == 33) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bolaa:applyForce( 100, 0, bolaa.x, bolaa.y )
-				elseif (event.target.radius == 22) then
-					bolaa= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
-					bolaa:applyForce( 50, 0, bolaa.x, bolaa.y )
-				end
-				bolaa:addEventListener( "collision", onLocalCollision )
-				grupoBolas:insert(bolaa)
-				sceneGroup:insert (bolaa)
-				-- bolaa:applyForce( 500, 0, bolaa.x, bolaa.y )
-
 			end, 1 )
 
 			event.target:removeSelf( )
