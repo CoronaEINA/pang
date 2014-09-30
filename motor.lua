@@ -10,7 +10,6 @@ local params = {
 }
 
 motor = {}
-bola = {}
 
 local personajeSequence = {
 	{

@@ -8,38 +8,16 @@
 -- Copyright 2014 . All Rights Reserved.
 -- 
 local composer = require( "composer" )
-local widget = require( "widget" )
-local scene = composer.newScene()
-local sheetInfo = require("sprites")
 local motor = require("motor")
 
-
--- -----------------------------------------------------------------------------------------------------------------
--- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
--- -----------------------------------------------------------------------------------------------------------------
-
--- local forward references should go here
-
--- -------------------------------------------------------------------------------
+local scene = composer.newScene()
 
 
--- "scene:create()"
 function scene:create( event )
 
-    local sceneGroup = self.view
-
-    -- Initialize the scene here.
-    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
- 	--juego = display.newText( "juego", 0, 0, native.systemFontBold, 24 )
- 	--juego = display.newImage( "tittle.png" )
-
-	titulo.alpha=0
+	local sceneGroup = self.view
 	
-	chuache = audio.loadSound( "chua.mp3" )
-
-	motor:inicializar_fisica()
-
- function onLocalCollision( event )     
+	function ballCollision (event)
 		if (event.other.myName=="personaje") then
 			print( event.target.myName .. ": collision began with " .. event.other.myName )
 			--vidas=vidas-1
@@ -58,48 +36,53 @@ function scene:create( event )
 			end
 			
 		elseif (event.other.myName == "flecha") then
-			--event.target:removeSelf( )
-			audio.play(chuache)
 			--audio.play( chuache )
+			print( event.target.myName .. ": collision began with " .. event.other.myName )
 			timer.performWithDelay( 1, function()
-				physics.pause()
-				physics.start()
-				if (event.target.radius == 33) then
-					bola1= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bola2= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-					bola1:applyForce( -100, 0, bola1.x, bola1.y )
-					bola2:applyForce( 100, 0, bola2.x, bola2.y )
-					bola1:addEventListener( "collision", onLocalCollision )
-					bola2:addEventListener( "collision", onLocalCollision )
-					grupoBolas:insert(bola1)
-					grupoBolas:insert(bola2)
-					sceneGroup:insert (bola1)
-					sceneGroup:insert (bola2)
-				elseif (event.target.radius == 22) then
-					bola1= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
-					bola2= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
-					bola1:applyForce( -50, 0, bola1.x, bola1.y )
-					bola2:applyForce( 50, 0, bola2.x, bola2.y )
-					bola1:addEventListener( "collision", onLocalCollision )
-					bola2:addEventListener( "collision", onLocalCollision )
-					grupoBolas:insert(bola1)
-					grupoBolas:insert(bola2)
-					sceneGroup:insert (bola1)
-					sceneGroup:insert (bola2)
+
+				for i = 0,2,1 do
+					if (event.target.radius == 33) then
+						bola= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
+						if (i == 0) then
+							bola:applyForce( -100, 0, bola.x, bola.y )
+						else
+							bola:applyForce( 100, 0, bola.x, bola.y )
+						end
+						bola:addEventListener( "collision", ballCollision )
+						grupoBolas:insert(bola)
+						sceneGroup:insert (bola)
+					elseif (event.target.radius == 22) then
+						bola= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
+						if (i == 0) then
+							bola:applyForce( -50, 0, bola.x, bola.y )
+						else
+							bola:applyForce( 50, 0, bola.x, bola.y )
+						end
+						bola:addEventListener( "collision", ballCollision )
+						grupoBolas:insert(bola)
+						sceneGroup:insert (bola)
+					end
 				end
 			end, 1 )
+
 			event.target:removeSelf( )
 			event.other:removeSelf( )
 		end
 	end
 
+	titulo.alpha=0
+
+	chuache = audio.loadSound( "chua.mp3" )
+
+	motor:inicializar_fisica()
+
 	suelo=motor:crearSuelo()
 	techo=motor:crearTecho()
 	paredI=motor:crearParedIzq()
 	paredD=motor:crearParedDer()
+	pers=motor:crearPersonaje()
 	
 	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),suelo,techo,paredI,paredD)
-	pers=motor:crearPersonaje()
 	sceneGroup:insert(back)
 	sceneGroup:insert(pers)
 	sceneGroup:insert(suelo)
@@ -116,7 +99,7 @@ function scene:create( event )
 		print (i) 
 		--local bolica
 		local bolica=motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,33) 
-		bolica:addEventListener( "collision", onLocalCollision )
+		bolica:addEventListener( "collision", ballCollision )
 		sceneGroup:insert (bolica)
 		bolas[i]=bolica
  	end 
