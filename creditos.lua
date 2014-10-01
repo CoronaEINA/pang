@@ -36,11 +36,11 @@ function scene:create( event )
 
     -- Initialize the scene here.
     -- Example: add display objects to "sceneGroup", add touch listeners, etc.
- 	pablo = display.newText( "Pablo Alegre: especialista en Ctrl+C Ctrl+V ", 0, 0, 				native.systemFontBold, 24 )
+ 	pablo = display.newText( "Pablo Alegre", 0, 0, 				native.systemFontBold, 24 )
  	pablo.x=display.contentWidth/2
  	pablo.y=display.contentHeight/4+80
  	sceneGroup:insert(pablo)
- 	cristofer = display.newText( "Cristofer Sanz: el de los cafes...", 0, 0, native.systemFontBold, 24 )
+ 	cristofer = display.newText( "Cristofer Sanz", 0, 0, native.systemFontBold, 24 )
  	cristofer.x=display.contentWidth/2
  	cristofer.y=display.contentHeight/4+120
  	sceneGroup:insert(cristofer)
