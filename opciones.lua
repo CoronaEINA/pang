@@ -40,17 +40,17 @@ function scene:create( event )
  	   if ( "ended" == event.phase ) then
         	print( "Button was pressed and released" .. event.target.id)
 			if event.target.id =="1" then
-        			conts.hearts=1
+        			conts.fluvi=1
 							fluvi.alpha=1
 							fluvi2.alpha=0
 							fluvi3.alpha=0
         		elseif event.target.id=="2" then
-        			conts.hearts=2
+        			conts.fluvi=2
 							fluvi.alpha=1
 							fluvi2.alpha=1
 							fluvi3.alpha=0
         		elseif event.target.id=="3" then
-        			conts.hearts=3
+        			conts.fluvi=3
 							fluvi.alpha=1
 							fluvi2.alpha=1
 							fluvi3.alpha=1

@@ -44,7 +44,7 @@ local flechaSequence = {
 }
 
 function motor:inicializar_fisica()
-	physics.setDrawMode( "hybrid" )
+	--physics.setDrawMode( "hybrid" )
 	physics.start( )
 	physics.setGravity( 0, 5 )
 end
@@ -111,7 +111,7 @@ end
 function motor:crearPersonaje()
 	personaje = display.newSprite( personajeSheet , personajeSequence )
 	personaje.x = display.contentCenterX
-	personaje.y= display.contentHeight-const.suelo.grosor
+	personaje.y= display.contentHeight-50
 	personaje.myName ="personaje"
 
 	grupoFrente = display.newGroup( )
@@ -126,9 +126,13 @@ function motor:crearPersonaje()
 end
 
 function motor:crearFlecha()
+    arrow = audio.loadSound( "sounds/tira.wav" )
+    audio.play( arrow )
 	flecha = display.newSprite( flechasSheet , flechaSequence )
 	flecha.y = personaje.y
 	flecha.x = personaje.x
+	flecha.width = 10
+	flecha.height = 150
 	flecha.myName = "flecha"
 
 	grupoFrente:insert (flecha)
@@ -150,6 +154,7 @@ function motor:crearBola(posX, posY, radio)
 	circle.id=const.bolas.numInicial
 	circle.myName = "ball"
 	circle.radius = radio
+    circle:setFillColor(1,0.5,0.5)
 	circle.xdir = params[tipoBola].xdir
 	circle.ydir = params[tipoBola].ydir
 	circle.xspeed = params[tipoBola].xspeed

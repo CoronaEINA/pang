@@ -16,34 +16,39 @@ local scene = composer.newScene()
 function scene:create( event )
 
 	local sceneGroup = self.view
-	
+	--Sonido--
+
+atontao = audio.loadSound( "sounds/atontao.wav" )
+audio.play( atontao )
 	function ballCollision (event)
+    if ( event.phase == "began" ) then
 		if (event.other.myName=="personaje") then
 			print( event.target.myName .. ": collision began with " .. event.other.myName )
-			--vidas=vidas-1
-			--personaje.x = display.contentCenterX
-			--personaje.y= display.contentHeight-const.suelo.grosor
-			--print("vidas"..vidas)
 			const.fluvi=const.fluvi-1
+            vidas.text=const.fluvi
 			if const.fluvi==0 then				--cero vidas, finaliza el juego
-				--vidas=2
+				
 				timer.performWithDelay( 500, function()
 						physics.stop()
 				end, 1 )
-				const.fluvi=3
+				const.fluvi=1
+                mes = audio.loadSound( "sounds/mes.wav" )
+                audio.play( mes )
 				composer.removeScene( "jugar" )
 				composer.gotoScene( "menu", "fade", 400 )
 			end
 			
 		elseif (event.other.myName == "flecha") then
 			--audio.play( chuache )
-			print( event.target.myName .. ": collision began with " .. event.other.myName )
+			print( event.target.myName .. ": collision began with " .. event.other.myName.."at"..event.x.."and ".. event.y)
 			timer.performWithDelay( 1, function()
 
 				for i = 0,2,1 do
 					if (event.target.radius == 33) then
+                        --event.x y event.y deberia dar la posicion del evento, pero nos devuelve 0 
+                        --bola= motor:crearBola(event.x,const.y,22)
 						bola= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,22) 
-						if (i == 0) then
+						if (i == 0) then     
 							bola:applyForce( -100, 0, bola.x, bola.y )
 						else
 							bola:applyForce( 100, 0, bola.x, bola.y )
@@ -52,6 +57,7 @@ function scene:create( event )
 						grupoBolas:insert(bola)
 						sceneGroup:insert (bola)
 					elseif (event.target.radius == 22) then
+                        --bola= motor:crearBola(event.x,const.event.y,11) 
 						bola= motor:crearBola(const.bolas.xDefault,const.bolas.yDefault,11) 
 						if (i == 0) then
 							bola:applyForce( -50, 0, bola.x, bola.y )
@@ -68,28 +74,34 @@ function scene:create( event )
 			event.target:removeSelf( )
 			event.other:removeSelf( )
 		end
+            end
+        
 	end
 
 	titulo.alpha=0
 
-	chuache = audio.loadSound( "chua.mp3" )
-
+	
 	motor:inicializar_fisica()
-
+	vidas = display.newText(const.fluvi, 0, 0, native.systemFontBold, 24 )
+    vidas.x=display.contentWidth-20
+ 	vidas.y=20
+    vidas:setFillColor(0,1,0)
 	suelo=motor:crearSuelo()
 	techo=motor:crearTecho()
 	paredI=motor:crearParedIzq()
 	paredD=motor:crearParedDer()
 	pers=motor:crearPersonaje()
-	
+
 	back=motor:crearBackground(motor:crearFondo("images/pilar.png"),suelo,techo,paredI,paredD)
-	sceneGroup:insert(back)
+	
+    
+    sceneGroup:insert(back)
 	sceneGroup:insert(pers)
 	sceneGroup:insert(suelo)
 	sceneGroup:insert(paredI)
 	sceneGroup:insert(paredD)
 	sceneGroup:insert(techo)
-	
+	sceneGroup:insert(vidas)
 	personaje:addEventListener( "touch", motor.disparoListener )
 	Runtime:addEventListener( "touch", motor.movingListener )
 	
@@ -102,6 +114,7 @@ function scene:create( event )
 		bolica:addEventListener( "collision", ballCollision )
 		sceneGroup:insert (bolica)
 		bolas[i]=bolica
+        bolica:applyForce( 500, 0, circle.x, circle.y )
  	end 
 end
 

@@ -44,6 +44,7 @@ function scene:create( event )
  	   		if event.target.id =="opciones" then
         			composer.gotoScene( "opciones", "fade", 400 )
         		elseif event.target.id=="jugar" then
+                    
         			composer.gotoScene( "jugar", "fade", 400 )
         		elseif event.target.id=="creditos" then
         			composer.gotoScene( "creditos", "fade", 400 )

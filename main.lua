@@ -5,5 +5,7 @@ display.setStatusBar( display.HiddenStatusBar )
 conts = require ( "const" )
 local composer = require "composer"
 
+iee = audio.loadSound( "sounds/iee.wav" )
+audio.play( iee )
 -- load first scene
 composer.gotoScene( "menu", "fade", 400 )
